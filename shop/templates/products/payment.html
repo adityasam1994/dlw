@@ -1,0 +1,251 @@
+{% extends 'base.html' %} {% load static %} {% load app_filters %}
+{% load mathfilters %}
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row myfont" style="margin-top: 4vw;margin-bottom: 4vw;border-radius: 20px;box-shadow: 0px 0px 10px #46464649;margin-left: 100px;margin-right: 100px">
+        <div class="col-sm-2">
+            <div class="row" style="height: 6vw">
+                <button class="btn w-100 paybtn paybtnpink" id="btndebit" onclick="payclick(this)">DEBIT CARD</button>
+            </div>
+            <div class="row" style="height: 6vw">
+                <button class="btn w-100 paybtn" id="btncredit" onclick="payclick(this)">CREDIT CARD</button>
+            </div>
+            <div class="row" style="height: 6vw">
+                <button class="btn w-100 paybtn" id="btnpaytm" onclick="payclick(this)">PAYTM</button>
+            </div>
+            <div class="row" style="height: 6vw">
+                <button class="btn w-100 paybtn" id="btnnet" onclick="payclick(this)">NET BANKING</button>
+            </div>
+            <div class="row" style="height: 6vw">
+                <button class="btn w-100 paybtn" id="btncod" onclick="payclick(this)">COD</button>
+            </div>
+        </div>
+
+        <div class="col-sm-7" style="background-color: #fbbde2;padding-left: 50px;padding-right: 50px">
+            <div id="btndebit_panel" class="w3-container w3-center w3-animate-left">
+                <div class="row" style="padding-top: 2vw;font-size: 18px">
+                    Fill Form Below
+                </div>
+                <div class="row" style="margin-top: 20px">
+                    <form action="" class="w-100">
+                        <div class="row">
+                            <div class="col-sm-3 table">
+                                <h6 class="myfont" style="vertical-align: middle">Card Number</h6>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" placeholder="Card Number" style="border-radius: 20px">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-3 table">
+                                <h6 class="myfont" style="vertical-align: middle">Name</h6>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" placeholder="Name on card" style="border-radius: 20px">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-3 table">
+                                <h6 class="myfont" style="vertical-align: middle">Expiry date</h6>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="date" class="form-control" placeholder="Expiry date" style="border-radius: 20px">
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-sm-3 table">
+                                <h6 class="myfont" style="vertical-align: middle">CVV</h6>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="number" class="form-control" placeholder="CVV" style="border-radius: 20px">
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-bottom: 30px">
+                            <div class="col-sm-6">
+                                <input type="submit" id="" value="Proceed" class="btn w-100" style="background-color: #39e0f3;border-radius: 20px;margin-top: 20px">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="btncredit_panel" class="removeit">
+                <div class="row" style="padding-top: 2vw;font-size: 18px">
+                    Fill Form Below
+                </div>
+                <div class="row" style="margin-top: 20px">
+                    <form action="" class="w-100">
+                        <div class="row">
+                            <div class="col-sm-3 table">
+                                <h6 class="myfont" style="vertical-align: middle">Card Number</h6>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" placeholder="Card Number" style="border-radius: 20px">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-3 table">
+                                <h6 class="myfont" style="vertical-align: middle">Name</h6>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" placeholder="Name on card" style="border-radius: 20px">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-3 table">
+                                <h6 class="myfont" style="vertical-align: middle">Expiry date</h6>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="date" class="form-control" placeholder="Expiry date" style="border-radius: 20px">
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-sm-3 table">
+                                <h6 class="myfont" style="vertical-align: middle">CVV</h6>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="number" class="form-control" placeholder="CVV" style="border-radius: 20px">
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-bottom: 30px">
+                            <div class="col-sm-6">
+                                <input type="submit" id="" value="Proceed" class="btn w-100" style="background-color: #39e0f3;border-radius: 20px;margin-top: 20px">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="btnpaytm_panel" class="removeit">
+                <div class="row" style="padding-top: 2vw;font-size: 18px">
+                    Fill Form Below
+                </div>
+                <div class="row" style="margin-top: 20px">
+                    <form action="" class="w-100">
+                        <div class="row">
+                            <div class="col-sm-3 table">
+                                <h6 class="myfont" style="vertical-align: middle">Paytm number</h6>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" placeholder="Paytm number" style="border-radius: 20px">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-3 table">
+                                <h6 class="myfont" style="vertical-align: middle">Name</h6>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" placeholder="Name of customer" style="border-radius: 20px">
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-bottom: 30px">
+                            <div class="col-sm-6">
+                                <input type="submit" id="" value="Proceed" class="btn w-100" style="background-color: #39e0f3;border-radius: 20px;margin-top: 20px">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="btnnet_panel" class="removeit">
+                <div class="row" style="padding-top: 2vw;font-size: 18px">
+                    Fill Form Below
+                </div>
+                <div class="row" style="margin-top: 20px">
+                    <form action="" class="w-100">
+                        <div class="row">
+                            <div class="col-sm-4 table">
+                                <h6 class="myfont" style="vertical-align: middle">Select bour bank</h6>
+                            </div>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" placeholder="Bank name" style="border-radius: 20px">
+                            </div>
+                        </div>
+
+
+                        <div class="row" style="margin-bottom: 30px">
+                            <div class="col-sm-6">
+                                <input type="submit" id="" value="Proceed" class="btn w-100" style="background-color: #39e0f3;border-radius: 20px;margin-top: 20px">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="btncod_panel" class="removeit">
+                <div class="row" style="margin-top: 20px">
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-6">
+                        <a href="{% url 'shop:place_order' address_id %}">
+                            <Button class="btn w-100" style="margin-top: 10vw; background-color: #39e0f3; border-radius: 20px">PLACE ORDER</Button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-sm-3" style="background-color: #39e0f3;border-top-right-radius: 20px">
+            <div class="row">
+                <div class="col-sm-12 text-center">
+                    <h5 class="myfont">Your Bill:</h5>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6 table">
+                    <h6 class="myfont" style="vertical-align: middle">Items count</h6>
+                </div>
+                <div class="col-sm-6 table" style="font-size: 20px;font-weight: bold">
+                    <h5 class="myfont" style="vertical-align: middle">{{ request.user.id|get_item_count }}</h5>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6 table">
+                    <h6 class="myfont" style="vertical-align: middle">Total price</h6>
+                </div>
+                <div class="col-sm-6 table" style="font-size: 20px;font-weight: bold">
+                    <h5 class="myfont" style="vertical-align: middle">INR {{ cart_total }}</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 table">
+                    <h6 class="myfont" style="vertical-align: middle">Delivery Charge</h6>
+                </div>
+                <div class="col-sm-6 table" style="font-size: 20px;font-weight: bold">
+                    <h5 class="myfont" style="vertical-align: middle">INR {{ delivery_charge }}</h5>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-8" style="border-bottom: 1px solid#464646"></div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6 table">
+                    <h5 style="vertical-align: middle" class="myfont">GRAND TOTAL:</h5>
+                </div>
+                <div class="col-sm-6 table">
+                    <h4 class="myfont" style="vertical-align: middle">INR {{ cart_total|add:delivery_charge }}</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

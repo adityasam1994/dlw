@@ -1,0 +1,99 @@
+{% extends 'base.html' %} {% load static %} {% load app_filters %} {% load mathfilters %} {% block content %}
+
+<div class="container-fluid">
+    <div class="row" style="margin-top: 30px;margin-left: 50px;margin-right: 50px;
+    box-shadow: 0px 0px 10px #46464649;border-radius: 20px">
+        {% if orders|length != 0 %}
+        <div class="col-sm-12 text-center myfont">
+            <table class="table table-borderless">
+                <thead>
+                    <tr style="letter-spacing: 2px">
+                        <th scope="col" class="w-25">PRODUCT</th>
+                        <th scope="col" class="w-25">PRICE</th>
+                        <th scope="col" class="w-25">QTY</th>
+                        <th scope="col" class="w-25">TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    {% with cc=order.id|splitorder %}
+                    {% for c in cc %}
+                    <tr>
+                        <th scope="row">
+                            {% with cancellimit=order.order_date|canceldate %}
+                            {% if cancellimit == False %}
+                            <div class="row" style="margin-bottom: -20px">
+                                <div class="col-sm-12 text-right">
+                                    <a href="{% url 'shop:removefromorder' c|get_pid order.id %}">
+                                        <i class="fa fa-plus" style="transform: rotate(45deg)"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% endwith %}
+                            <div class="row">
+                                {% with im=c|get_item_image %}
+                                <img src="{{ im.image.url }}" alt="" style="width: 100%;padding-top: 20px;padding-left: 4vw;padding-right: 4vw"> {% endwith %}
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 text-center" style="font-size: 12px">
+                                    {{ c|get_item_name }}
+                                </div>
+                            </div>
+                        </th>
+                        <td style="vertical-align: middle;letter-spacing: 1px">INR {{ c|get_item_price }}</td>
+                        <td style="vertical-align: middle">
+                            <div class="row">
+                                <div class="col-sm-4 text-center">
+                                </div>
+                                <div class="col-sm-4 text-center" style="border: 1px solid #464646;display: table;padding: 5px">
+                                    <input value="{{ c|get_item_qty }}" style="width: 100%;text-align: center" readonly/>
+                                </div>
+                                <div class="col-sm-4 text-center">
+                                </div>
+                            </div>
+                        </td>
+                        {% with t=c|get_item_price q=c|get_item_qty %}
+                        <td style="vertical-align: middle;letter-spacing: 1px">INR {{ t|mul:q }}</td>
+                        {% endwith %}
+                    </tr>
+                    {% endfor %}
+                    {% endwith %}
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="col-sm-6"></div>
+                <div class="col-sm-3 text-right">
+                    <h6 class="myfont">DELIVERY CHARGE</h6>
+                </div>
+                <div class="col-sm-3">
+                    <h5 class="myfont">
+                        INR {{ delivery_charge }}
+                    </h5>
+                </div>
+            </div>
+            <div class="row" style="border-top: 1px solid #46464649;padding-top: 20px;padding-bottom: 30px">
+                <div class="col-sm-6"></div>
+                <div class="col-sm-3 text-right">
+                    <h5 class="myfont">GRAND TOTAL</h5>
+                </div>
+                <div class="col-sm-3 text-center" style="border: 1px solid gray; border-radius: 10px">
+                    <h4 class="myfont">INR {{ order_total }}</h4>
+                </div>
+            </div>
+        </div>
+
+        {% else %}
+        <div class="col-sm-12 text-center">
+            <h3 class="myfont" style="padding-top: 30px; padding-bottom: 30px">YOU HAVE NOT ORDERED ANYTHING YET</h3>
+            <a href="{% url 'shop:home' %}">
+                <button class="btn btn-success myfont" style="border-radius: 20px; margin-bottom: 30px
+                    ;color: white">CONTINUE SHOPPING</button>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock%}

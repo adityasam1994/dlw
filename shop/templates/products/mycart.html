@@ -1,0 +1,292 @@
+{% extends 'base.html' %} {% load static %} {% load app_filters %} {% load mathfilters %} {% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        {% if cart|length != 0 %}
+        <form action="{% url 'shop:updatecart' cart|length %}" id="cartform" method="POST" hidden>
+            {% csrf_token %} {% for c in cart %}
+            <input type="number" name="pid{{ forloop.counter }}" id="pid{{ forloop.counter }}" value="{{c|get_pid }}"> {% endfor %} {% for c in cart %}
+            <input type="number" name="qty{{ forloop.counter }}" id="qty{{ forloop.counter }}" value="{{ c|get_item_qty }}"> {% endfor %}
+        </form>
+        {% endif %}
+    </div>
+    <div class="row" style="margin-top: 30px;margin-left: 50px;margin-right: 50px;
+    box-shadow: 0px 0px 10px #46464649;border-radius: 20px">
+        {% if cart|length != 0 %}
+        <div class="col-sm-8 text-center myfont">
+            <table class="table table-borderless">
+                <thead>
+                    <tr style="letter-spacing: 2px">
+                        <th scope="col" class="w-25">PRODUCT</th>
+                        <th scope="col" class="w-25">PRICE</th>
+                        <th scope="col" class="w-25">QTY</th>
+                        <th scope="col" class="w-25">TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in cart %}
+                    <tr>
+                        <th scope="row">
+                            <div class="row" style="margin-bottom: -20px">
+                                <div class="col-sm-12 text-right">
+                                    <a href="{% url 'shop:removefromcart' c|get_pid %}">
+                                        <i class="fa fa-plus" style="transform: rotate(45deg)"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                {% with im=c|get_item_image %}
+                                <img src="{{ im.image.url }}" alt="" style="width: 100%;padding-top: 20px;padding-left: 20px;padding-right: 20px"> {% endwith %}
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 text-center" style="font-size: 12px">
+                                    {{ c|get_item_name }}
+                                </div>
+                            </div>
+                        </th>
+                        <td style="vertical-align: middle;letter-spacing: 1px">INR {{ c|get_item_price }}</td>
+                        <td style="vertical-align: middle">
+                            <div class="row">
+                                <div class="col-sm-4 text-center" onclick="countminuscart('{{forloop.counter}}')">
+                                    <i class="fa fa-minus"></i>
+                                </div>
+                                <div class="col-sm-4 text-center" style="border: 1px solid #464646;display: table;padding: 5px">
+                                    <input id="item{{ forloop.counter }}" value="{{ c|get_item_qty }}" style="width: 100%;text-align: center" readonly/>
+                                </div>
+                                <div class="col-sm-4 text-center" onclick="countpluscart('{{forloop.counter}}')">
+                                    <i class="fa fa-plus"></i>
+                                </div>
+                            </div>
+                        </td>
+                        {% with t=c|get_item_price q=c|get_item_qty %}
+                        <td style="vertical-align: middle;letter-spacing: 1px">INR {{ t|mul:q }}</td>
+                        {% endwith %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="row" style="border-top: 1px solid #46464649;padding-top: 20px;padding-bottom: 30px">
+                <div class="col-sm-6"></div>
+                <div class="col-sm-3">
+                    <button class="btn" onclick="updatecart('{{cart|length}}')" style="width: 100%;background-color: #f676c0;border-radius: 20px;letter-spacing: 1px">UPDATE</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4" style="background-color: #fbbde2;border-top-right-radius: 20px;padding-top: 50px">
+            <div class="row">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-8" style="height: 5px;background-color: #39e0f3;width: 70%"></div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-11">
+                    <div class="row myfont" style="margin-top: 50px">
+                        <div class="col-sm-4 table">
+                            <h5 style="vertical-align: middle;font-size: 12px;letter-spacing: 1px;font-family: Rockwell">CART TOTAL</h5>
+                        </div>
+                        <div class="col-sm-8" style="font-weight: bold;letter-spacing: 1px;font-size: 18px">INR {{cart|get_cart_total}}</div>
+                    </div>
+                    <div class="row myfont" style="font-size: 12px">
+                        <div class="col-sm-12">
+                            Shipping & taxes calculated at checkout
+                        </div>
+                    </div>
+
+                    <form action="{% url 'shop:checkout' %}" method="POST" style="margin-top: 50px">
+                        {% csrf_token %}
+                        {% for add in addresses|slice:1 %}
+                        <input type="text" id="selectedaddress" value="{{add.id}}" name="address_id" hidden>
+                        {% endfor %}
+                        <div class="row myfont">
+                            <div class="col-sm-1">
+                                <input type="checkbox" name="checks">
+                            </div>
+                            <div class="col-sm-10">
+                                I agree the
+                                <a href="" style="color: blue">Terms & Conditions</a>
+                            </div>
+                        </div>
+
+                        <div class="row myfont" style="margin-top: 30px">
+                            <div class="col-sm-5">
+                                <input type="submit" id="checkoutbtn" disabled value="Checkout" class="btn w-100" style="border-radius: 20px;background-color: #39e0f3">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <div class="row" style="margin-top: 30px;margin-left: 50px;margin-right: 50px;
+    box-shadow: 0px 0px 10px #46464649;border-radius: 20px; margin-bottom: 2vw">
+        <div class="col-sm-12">
+            <div class="row">
+                <div class="col-sm-7">
+                    <h5 class="myfont" style="margin-left: 4vw">YOUR DELIVERY ADDRESS 
+                        <i class="fa fa-check" style="color: green"></i>
+                    </h5>
+                </div>
+                <div class="col-sm-4">
+                    <h5 class="myfont" style="margin-left: 4vw">SAVED ADDRESS</h5>
+                </div>
+            </div>
+            <div class="row myfont" style="margin-left: 4vw; margin-top: 2vw; margin-bottom: 2vw">
+                {% for address in addresses|slice:1 %}
+                <div class="col-sm-6" style="border-right: 1px solid gray">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            NAME:
+                        </div>
+                        <div class="col-sm-8">
+                            <p id="mainname">{{address.name}}</p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-3">
+                            ADDRESS:
+                        </div>
+                        <div class="col-sm-8">
+                            <p id="mainaddress">{{address.address}}</p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-3">
+                            PHONE:
+                        </div>
+                        <div class="col-sm-8">
+                            <p id="mainphone">{{address.phone}}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                <div class="col-sm-6 myfont" style="padding-left: 4vw">
+                    {% for address in addresses %}
+                    
+                    <div class="row" style="margin-bottom: 1vw">
+                        <div class="col-sm-1" style="font-weight: bold">
+                            {{ forloop.counter }}:
+                        </div>
+                        <div class="col-sm-9">
+                            <div class="row">
+                                <p style="margin: 0" id="name{{address.id}}">{{address.name}}</p>
+                            </div>
+                            <div class="row">
+                                <p style="margin: 0" id="address{{address.id}}">{{address.address}}</p>
+                            </div>
+                            <div class="row">
+                                <p style="margin: 0" id="phone{{address.id}}">{{address.phone}}</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                <button class="btn btn-sm btn-success w-100" onclick="selectaddress('{{address.id}}')" style="border-radius: 20px">SELECT</button>
+                                    </div>
+                            </div>
+                            <div class="row" style="margin-top: 0.2vw">
+                                <div class="col-sm-12">
+                                <button class="btn btn-sm btn-primary w-100" style="border-radius: 20px" data-toggle="modal" data-target="#editaddressModal">EDIT</button>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- editaddrees modal -->
+
+                    <div class="modal fade" id="editaddressModal" tabindex="-1" role="dialog" aria-labelledby="editaddressModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title myfont" id="exampleModalLabel">ADD ADDRESS</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <div class="modal-body">
+                                  <form action="{% url 'shop:edit_address' address.id %}" method="POST">
+                                      {% csrf_token %}
+                                      <input type="text" name="name" id="" placeholder="NAME" value="{{ address.name }}" class="form-control" style="margin-bottom: 1vw;border-radius: 20px">
+                                      <input type="text" name="address" id="" placeholder="ADDRESS" value="{{ address.address }}" class="form-control" style="margin-bottom: 1vw;border-radius: 20px">
+                                      <input type="tel" name="phone" id="" placeholder="PHONE" value="{{ address.phone }}" class="form-control" style="margin-bottom: 1vw;border-radius: 20px">
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-dismiss="modal" 
+                                  style="margin-bottom: 1vw;border-radius: 20px">Close</button>
+                                  <button type="submit" class="btn btn-primary" style="margin-bottom: 1vw;border-radius: 20px">Save changes</button>
+                                </form>
+                                  <a href="{% url 'shop:del_address' address.id %}">
+                                  <button class="btn btn-danger" style="margin-bottom: 1vw;border-radius: 20px"> DELETE </button>
+                                  </a>
+                                </div>
+                            
+                              </div>
+                            </div>
+                          </div>
+
+
+
+                    {% endfor %}
+                    
+                    <div class="row" style="margin-top: 3vw">
+                        <div class="col-sm-12 text-right">
+                            <Button class="btn" data-toggle="modal" data-target="#addressModal"
+                             style="border-radius: 20px; background-color: #39e0f3">
+                                ADD NEW ADDRESS
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="row w-100" style="margin-top: 30px;margin-left: 50px;margin-right: 50px;
+    box-shadow: 0px 0px 10px #46464649;border-radius: 20px; margin-bottom: 2vw">
+    {% if cart|length == 0%}
+
+    <div class="col-sm-12 text-center">
+        <h3 class="myfont" style="padding-top: 30px; padding-bottom: 30px">YOUR CART IS EMPTY</h3>
+        <a href="{% url 'shop:home' %}">
+            <button class="btn btn-success myfont" style="border-radius: 20px; margin-bottom: 30px
+                ;color: white">CONTINUE SHOPPING</button>
+        </a>
+    </div>
+
+{% endif %}
+</div>
+</div>
+
+      
+      <!-- Modal -->
+      <div class="modal fade" id="addressModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title myfont" id="exampleModalLabel">ADD ADDRESS</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form action="{% url 'shop:add_address' %}" method="POST">
+                  {% csrf_token %}
+                  <input type="text" name="name" id="" placeholder="NAME" class="form-control" style="margin-bottom: 1vw;border-radius: 20px">
+                  <input type="text" name="address" id="" placeholder="ADDRESS" class="form-control" style="margin-bottom: 1vw;border-radius: 20px">
+                  <input type="tel" name="phone" id="" placeholder="PHONE" class="form-control" style="margin-bottom: 1vw;border-radius: 20px">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal" 
+              style="margin-bottom: 1vw;border-radius: 20px">Close</button>
+              <button type="submit" class="btn btn-primary" style="margin-bottom: 1vw;border-radius: 20px">Save changes</button>
+            </div>
+        </form>
+          </div>
+        </div>
+      </div>
+
+{% endblock %}

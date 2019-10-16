@@ -1,0 +1,74 @@
+{% extends 'base.html' %} {% load static %} {% load app_filters%} {% block content %} {% include 'products/carousel.html'%}
+
+<div class="container-fluid" style="background-color: aqua;font-family: Rockwell">
+    <div class="row" style="padding-left: 3vw">
+        <h5 class="myfont" style="font-weight: bold">Search results for "{{query}}"</h5>
+    </div>
+    <div class="row" style="padding-left: 3vw;padding-right: 3vw;padding-top: 3vw">
+        {% for pro in products %}
+        <div class="col-sm-3 col-3" style="margin-bottom: 3vw">
+                <div class="card product_cards">
+                    {% with img=pro.id|getimage %}
+                    <a href="{{ pro.get_absolute_url }}">
+                    <img src="{{ img.image.url }}" class="card-img-top" alt="..." style="height: 15vw;object-fit: contain"> {% endwith %}
+                    {% with off=pro.id|checkoffer %}
+                    {% if off != None %}
+                    <div class="carousel-caption" style="transform: rotate(-30deg)">
+                        <h1 style="color: white" class="myfont">{{ off|get_off_percent }}% Off</h1>
+                    </div>
+                    {% endif %}
+                    {% endwith %}    
+                </a>
+                    <div class="card-body">
+                            <h6 class="card-title text-center myfont cardname" style="color: #464646">{{pro.name|upper}}</h6>
+                            {% with off=pro.id|checkoffer %}
+                            {% if off != None %}
+                            <div class="row">
+                                <div class="col-sm-6 text-right">
+                                    <h6 class="card-title myfont" style="color: grey;text-decoration: line-through;
+                                    margin-right: -0.5vw">INR {{pro.price}}</h6>
+                                </div>
+                                <div class="col-sm-6 text-left">
+                                    <h5 class="card-title myfont" style="color: #03adc0;margin-left: -0.5vw">
+                                        INR {{pro.price|get_off_price:off}}</h5>
+                                </div>
+                            </div>
+                            {% else %}
+                            <h5 class="card-title text-center myfont" style="color: #03adc0">INR {{pro.price}}</h5>
+                            {% endif %}
+                            {% endwith %}
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    {% if request.user.is_authenticated %}
+                                    {% with al=pro.id|checkcartbtn:request.user.id %}
+                                    {% if al == True %}
+                                    <a href="{% url 'shop:removefromcartdirect' pro.id %}">
+                                        <button class="btn w-100 remove_cart_btn">REMOVE</button>
+                                    </a>
+                                    {% else %}
+                                    <a href="{% url 'shop:add_to_cart_direct' pro.id %}">
+                                        <button class="btn w-100 add_cart_btn">ADD TO CART</button>
+                                    </a>
+                                    {% endif %}
+                                    {% endwith %}
+                                    {% else %}
+                                    
+                                    <button class="btn w-100 add_cart_btn" onclick="showcartaddmodal()" data-toggle="modal" data-target="#loginmodal">ADD TO CART</button>
+                                    
+                                    {% endif %}
+                                </div>    
+
+                                <div class="col-sm-6">
+                                    <a href="{{ pro.get_absolute_url }}">
+                                        <button class="btn w-100 buy_now_btn">BUY NOW</button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

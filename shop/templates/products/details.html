@@ -1,0 +1,280 @@
+{% extends 'base.html' %} {% load static %} {% load mathfilters%} {% load app_filters %} {% block content %}
+
+<div class="container-fluid">
+    <div class="row" style="margin-top: 20px;height: 500px">
+        <div class="col-sm-2 text-center" style="height: 500px;border-right: 1px solid #c9c9c9;margin-top: 20px;overflow-y: auto;position: relative;">
+            <div class="row carousel-indicator" style="padding-bottom: 30px">
+                {% with images=product.id|getallimages %}
+                {% for image in images %}
+                <div class="col-sm-12" style="border-bottom: 1px solid #c9c9c9">
+                    <button {% if forloop.counter == 1 %} class="btn icon_button icon_button_active" {% else %} class="btn icon_button" {% endif %}
+                    id="icon{{forloop.counter}}" data-target="#carouselExampleIndicators" data-slide-to="{{ forloop.counter|sub:1 }}">
+                        <img src="{{ image.image.url }}" alt="" class="product-icons">
+                    </button>
+                </div>
+                {% endfor %}
+                {% endwith %}
+              
+            </div>
+        </div>
+        <div class="col-sm-5">
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" style="width: 100%; object-fit: contain;padding: 20px">
+
+                <div class="carousel-inner" id="imagecarousel">
+                    {% with images=product.id|getallimages %}
+                    {% for image in images %}
+                    <div {% if forloop.counter == 1 %} class="carousel-item active" {% else %} class="carousel-item" {% endif %} 
+                    id="image{{forloop.counter}}">
+                        <img src="{{ image.image.url }}" class="d-block w-100" alt="...">
+                    </div>
+                    {% endfor %}
+                    {% endwith%}
+                </div>
+                <input type="int" value="4" hidden id="imagecount">
+                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                    <i class="fa fa-chevron-circle-left" aria-hidden="true" style=" font-size: 20px;color: #464646"></i>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                    <i class="fa fa-chevron-circle-right" aria-hidden="true" style=" font-size: 20px;color: #464646"></i>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-sm-5 myfont">
+            <div class="row" style="padding-top: 20px">
+                <h4 class="myfont">{{ product.name|upper}}</h4>
+            </div>
+            <div class="row" style="margin-top: 10px">
+                {% with stars=product.id|get_average_stars %}
+                {% if stars != 0 %}
+                <div class="col-sm-4">
+                    
+                    {% for i in stars|times %}
+                    <i class="fa fa-star star_font star_yellow"></i>
+                    {% endfor %}
+
+                    {% if stars < 5%}
+                    {% for j in 5|sub:stars|times %}
+                    <i class="fa fa-star star_font"></i>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+                {% endif %}
+                {% endwith %}
+                <div class="col-sm-7">
+                    {% if product.id|get_star_count != 0 %}
+                    {{ product.id|get_star_count}} Reviews
+                    {% else %}
+                    No reviews yet
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="row" style="margin-top: 20px">
+                <p style="padding-right: 80px;text-align: justify;font-size: 12px;line-height: 25px">
+                    {{product.description}}
+                </p>
+            </div>
+
+            <div class="row" style="margin-bottom: 20px">
+                    {% with off=product.id|checkoffer %}
+                    {% if off != None %}
+                        <div class="col-sm-3">
+                            <div class="row">
+                        <h6 class="myfont" style="text-decoration: line-through"> INR {{product.price}}</h6>
+                        </div>
+                        <div class="row">
+                            <h6 class="myfont" style="margin: 0;font-size: 14px;color: palevioletred">{{off|get_off_percent}}% Off</h6>
+                        </div>
+                        </div>
+                        <div class="col-sm-6">
+                        <h5 class="myfont darkblue" style="font-weight: bold;margin-left: -2vw"> INR {{product.price|get_off_price:off}}</h5>
+                        </div>
+                    
+                    {% else %}
+                <h5 class="darkblue myfont" style="font-weight: bold">INR {{product.price}}</h5>
+                {% endif %}
+                {% endwith %}
+            </div>
+            <form action="{% url 'shop:add_to_cart' product.id product.slug %}" method="POST" id="formaddtocart" hidden>
+                {% csrf_token %}
+                <input type="number" name="itemcount" id="itemcount"
+                {% if request.user.is_authenticated %} value="{{product.id|checkcart:request.user.id}}" {% else %} value="1" {% endif %} readonly>
+                <input type="number" name="proid" value="{{ product.id }}">
+            </form>
+            <div class="row">
+                <div class="col-sm-1 text-center" onclick="countminus('count')" style="border: 1px solid #464646;display: table;padding: 8px">
+                    <i class="fa fa-minus"></i>
+                </div>
+                <div class="col-sm-1 text-center" style="border: 1px solid #464646;display: table;padding: 5px">
+                    <input id="count"
+                    {% if request.user.is_authenticated %} value="{{product.id|checkcart:request.user.id}}" {% else %} value="1" {% endif %} 
+                    style="width: 100%;text-align: center" readonly/>
+                </div>
+                <div class="col-sm-1 text-center" onclick="countplus('count')" style="border: 1px solid #464646;display: table;padding: 8px">
+                    <i class="fa fa-plus"></i>
+                </div>
+
+                {% if request.user.is_authenticated %}
+                {% with al=product.id|checkcartbtn:request.user.id %}
+
+                <div class="col-sm-2">
+                    {% if al == True %}
+                    <button class="btn btn-info roundbtn" id="btnaddtocart">Update</button>
+                    {% endif %}
+                </div>
+                
+                <div class="col-sm-7">
+                    {% if al == True %}
+                    <a href="{% url 'shop:removefromcart' product.id product.slug %}">
+                    <button class="btn roundbtn" style="background-color: #d64d4d;color: white">
+                        <i class="fa fa-cart-plus" style="margin-right: 10px"></i>
+                        REMOVE FROM CART
+                    </button>
+                    </a>
+                    {% else %}
+                    <button class="btn roundbtn" style="background-color: #464646;color: white" id="btnaddtocart">
+                        <i class="fa fa-cart-plus" style="margin-right: 10px"></i>
+                        ADD TO CART
+                    </button>
+                    {% endif %}
+                    {% endwith %}
+
+                    {% else %}
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-7">
+                            <button class="btn roundbtn" 
+                            data-toggle="modal" onclick="showcartaddmodal()" data-target="#loginmodal" style="background-color: #464646;color: white">
+                                    <i class="fa fa-cart-plus" style="margin-right: 10px"></i>
+                                    ADD TO CART
+                                </button>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- login modal -->
+
+      <div class="modal fade myfont" id="loginmodal" tabindex="-1" role="dialog" aria-labelledby="loginmodalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title myfont" id="loginmodalTitle">Login Required</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              Login is required to add item into cart
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <a href="{% url 'shop:loginnow' %}">
+              <button type="button" class="btn btn-primary">Login Now</button>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- login modal end -->
+
+
+      {% if request.user.is_authenticated %}
+    <div class="row myfont" style="margin-top: 50px;margin-bottom: 10px;border-top: 1px solid #46464649">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-10">
+            <h3 class="myfont">Reviews</h3>
+        </div>
+    </div>
+
+    <div class="row myfont" style="margin-bottom: 30px">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-5">
+            <form action="." class="w-100" method="POST">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-sm-9">
+                <input type="text" class="form-control" name="review" placeholder="Your review" style="border-radius: 20px">
+                <input type="number" value="4" name="stars" id="stars" hidden>
+                </div>
+                <div class="col-sm-3">
+                <input type="submit" class="btn-success form-control" value="Submit" style="border-radius: 20px">
+                </div>
+                </div>
+                <div class="row-sm" style="margin-top: 10px">
+                    <i class="fa fa-star star_font star_yellow" id="star1" onmouseover="changecolor(1)" onmouseout="removecolor(1)"></i>
+                    <i class="fa fa-star star_font star_yellow" id="star2" onmouseover="changecolor(2)" onmouseout="removecolor(2)"></i>
+                    <i class="fa fa-star star_font star_yellow" id="star3" onmouseover="changecolor(3)" onmouseout="removecolor(3)"></i>
+                    <i class="fa fa-star star_font star_yellow" id="star4" onmouseover="changecolor(4)" onmouseout="removecolor(4)"></i>
+                    <i class="fa fa-star star_font " id="star5" onmouseover="changecolor(5)" onmouseout="removecolor(5)"></i>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+
+    {% with reviews=product.id|getreviews %}
+    {% for review in reviews %}
+    <div class="row myfont" style="margin-top: 10px">
+            <div class="col-sm-1"></div>
+            <div class="col-sm-10">
+                <div class="row-sm">
+                    {% with user=review.customer_id|getcustomer %}
+                    <h6 class="myfont" style="font-weight: bold">({{ user.username }})</h6>
+                    {% endwith %}
+                </div>
+                <div class="row h-25">
+                    <div class="col-sm-2">
+                        {% for i in review.rating|times %}
+                        <i class="fa fa-star star_font star_yellow"></i>
+                        {% endfor %}
+
+                        {% if review.rating < 5%}
+                            {% for j in 5|sub:review.rating|times %}
+                            <i class="fa fa-star star_font"></i>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="col-sm-9 table">
+                        <p class="myfont" style="vertical-align: middle">{{review.review}}</p>
+                    </div>
+                </div>
+                <div class="row-sm h-50 myfont" style="min-height: 10px">{{review.date}}</div>
+            </div>
+        </div>
+        {% endfor %}
+    {% endwith %}
+
+    <div class="row myfont related" style="position: relative;z-index: 1;">
+        <div class="col-sm-12">
+            <div class="row" style="padding-top: 20px;">
+                <h4 style="color: black; padding-left: 210px" class="myfont">Related Items</h4>
+            </div>
+            <div id="carouselproduct" class="carousel slide" data-ride="carousel" style="font-family: Rockwell">
+                <div class="carousel-inner">
+                    <div class="carousel-item active" style="padding-bottom: 40px">
+                        {% include 'product_carousel_items.html' %}
+                    </div>
+                    <div class="carousel-item" style="padding-bottom: 40px">
+                        {% include 'product_carousel_items.html' %}
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#carouselproduct" role="button" data-slide="prev">
+                    <i class="fa fa-chevron-left" aria-hidden="true" style=" font-size: 40px;color: #464646;transform: scaleY(3);"></i>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselproduct" role="button" data-slide="next">
+                    <span class="sr-only">Next</span>
+                    <i class="fa fa-chevron-right" aria-hidden="true" style=" font-size: 40px;color: #464646;transform: scaleY(3);"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'base.html' %} {% load static %} {% load app_filters%} {% block content %} {% include 'products/carousel.html'%}
+
+<div class="container-fluid">
+    <div class="row" style="margin: 3vw;box-shadow: 0px 0px 20px grey; border-radius: 2vw">
+        <div class="col-sm-12">
+            {% for offer in offers %}
+            <div class="row">
+                <div class="col-sm-12 text-center">
+                    <h3 class="myfont">{{offer.name|upper}}</h3>
+                    <h6 class="myfont" style="color: forestgreen">{{offer.description}}</h6>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

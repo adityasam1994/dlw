@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<head>
+    <title>Order Placed</title>
+    <meta http-equiv = "refresh" content = "2; url = {% url 'shop:home' %}" />
+ </head>
+
+<div class="container-fluid">
+    <div class="row" style="margin-top: 30px;margin-left: 50px;margin-right: 50px;
+    box-shadow: 0px 0px 10px #46464649;border-radius: 20px">
+        <div class="col-sm-12 text-center" style="padding: 3vw">
+            <div class="row">
+                <div class="col-sm-12 text-center">
+                    <h3 class="myfont">Order Placed</h3>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 3vw">
+                <div class="col-sm-12 text-center myfont">
+                    <a href="{% url 'shop:home' %}">
+                    <Button class="btn" style="background-color: aqua;border-radius: 20px">
+                        CONTINUE SHOPPING
+                    </Button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

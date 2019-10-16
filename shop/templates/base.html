@@ -1,0 +1,210 @@
+<!DOCTYPE HTML> {% load staticfiles %}
+<html lang="en-US">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-compatible" Content="IE-edge">
+  <meta name="viewport" content="width=device-width">
+  <title>Delhi Leather Works</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+    crossorigin="anonymous">
+  <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="{% static 'css/mystyle.css' %}">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+
+<body>
+
+  {% include 'navbar.html' %} {% include 'sitename.html' %} {% block content %} {% endblock %} {% include 'footer.html'%}
+
+  <!-- JQuery -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <!-- Bootstrap tooltips -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <!-- MDB core JavaScript -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.10/js/mdb.min.js"></script>
+  </script>
+
+  <script>
+    function changecolor(x) {
+      $("#stars").val(x);
+      for (var i = 5; i > 0; i--) {
+        document.getElementById("star" + i).classList.remove("star_yellow");
+      }
+
+      for (var i = 1; i < x + 1; i++) {
+        document.getElementById("star" + i).classList.add("star_yellow");
+      }
+    }
+
+    function removecolor(x) {
+      for (var i = 5; i > x; i--) {
+        document.getElementById("star" + i).classList.remove("star_yellow");
+      }
+    }
+  </script>
+
+  <script>
+  $(document).ready(function(){
+    $("#btnaddtocart").click(function(){        
+        $("#formaddtocart").submit(); // Submit the form
+    });
+});
+  </script>
+
+
+<script>
+  function updatecart(x){
+      $("#cartform").submit();
+  }
+    </script>
+
+  <script>
+    function countplus(x) {
+      var cc = document.getElementById(x).value;
+      document.getElementById(x).value = parseInt(cc) + 1;
+      document.getElementById("itemcount").value = parseInt(cc) + 1;
+    }
+
+    function countminus(x) {
+      var cc = document.getElementById(x).value;
+      if (parseInt(cc) > 1) {
+        document.getElementById(x).value = parseInt(cc) - 1;
+        document.getElementById("itemcount").value = parseInt(cc) - 1;
+      }
+    }
+  </script>
+
+<script>
+    function countpluscart(x) {
+      var cc = document.getElementById("item"+x).value;
+      document.getElementById("item"+x).value = parseInt(cc) + 1;
+      document.getElementById("qty"+x).value = parseInt(cc) + 1;
+    }
+
+    function countminuscart(x) {
+      var cc = document.getElementById("item"+x).value;
+      if (parseInt(cc) > 1) {
+        document.getElementById("item"+x).value = parseInt(cc) - 1;
+        document.getElementById("qty"+x).value = parseInt(cc) - 1;
+      }
+    }
+  </script>
+
+  <script>
+    // target element that we will observe
+    var c = document.getElementById("imagecount").value;
+    const target = document.getElementById("imagecarousel");
+
+    // config object
+    const config = {
+      attributes: true,
+      attributeOldValue: true,
+      characterData: true,
+      characterDataOldValue: true,
+      childList: true,
+      subtree: true
+    };
+
+    // subscriber function
+    function subscriber(mutations) {
+      mutations.forEach((mutation) => {
+        // handle mutations 
+        for (var i = 1; i <= c; i++) {
+          if ($("#image"+i).hasClass("active")) {
+            $("#icon"+i).addClass("icon_button_active");
+          }
+          else {
+            $("#icon"+i).removeClass("icon_button_active");
+          }
+        }
+      });
+    }
+
+    // instantiating observer
+    const observer = new MutationObserver(subscriber);
+
+    // observing target
+    observer.observe(target, config);
+  </script>
+
+
+<script>
+function switchnow(){
+  var lf = $(".removeit");
+  var sf = $(".w3-container");
+  
+    lf.removeClass("removeit");
+    lf.addClass("w3-container w3-center w3-animate-left");
+
+    sf.removeClass("w3-container w3-center w3-animate-left");
+    sf.addClass("removeit");
+}
+</script>
+
+<script>
+  function payclick(x){
+    var nn = x.id;
+    var newname = nn+"_panel";
+    $("#btndebit_panel").addClass("removeit");
+    $("#btncredit_panel").addClass("removeit");
+    $("#btnpaytm_panel").addClass("removeit");
+    $("#btnnet_panel").addClass("removeit");
+    $("#btncod_panel").addClass("removeit");
+
+    $("#"+newname).removeClass("removeit");
+    $("#"+newname).addClass("w3-container w3-center w3-animate-left");
+
+    $("#btndebit").removeClass("paybtnpink");
+    $("#btncredit").removeClass("paybtnpink");
+    $("#btnpaytm").removeClass("paybtnpink");
+    $("#btnnet").removeClass("paybtnpink");
+    $("#btncod").removeClass("paybtnpink");
+    
+    $("#"+nn).removeClass("paybtnpink");
+    $("#"+nn).addClass("paybtnpink");
+  }
+</script>
+
+<script>
+$('input[type=checkbox]').change(
+    function(){
+        if (this.checked) {
+          $("#checkoutbtn").attr("disabled", false);
+        }else{
+          $("#checkoutbtn").attr("disabled", true);
+        }
+    });
+</script>
+
+<script>
+  function selectaddress(x){
+    var n = $("#name"+x).text();
+    var a = $("#address"+x).text();
+    var p = $("#phone"+x).text();
+
+    $("#mainname").text(n);
+    $("#mainaddress").text(a);
+    $("#mainphone").text(p);
+
+    $("#selectedaddress").val(x);
+  }
+</script>
+
+<script>
+  function showordermodal(){
+    $("#loginrequired").text("Login is required to view your orders");
+  }
+
+  function showcartmodal(){
+    $("#loginrequired").text("Login is required to view your cart");
+  }
+
+  function showcartaddmodal(){
+    $("#loginrequired").text("Login is required to add items to your cart");
+  }
+</script>
+
+</body>

@@ -1,0 +1,266 @@
+.navbar_color{
+    background-color: #f676c0;
+}
+
+.nav-link{
+    color: whitesmoke
+}
+
+.navbar{
+    height: 40px;
+    font-family: "Rockwell";
+}
+
+.search-lens{
+    background: transparent;
+    border-radius: 20px;
+    margin-left: -40px;
+}
+
+@font-face{
+    font-family: "roboto";
+    src: url("/static/font/sensation.ttf");
+    font-style: normal;
+    font-weight: 100;
+}
+
+.myfont{
+    font-family: Rockwell;
+    color: #464646;
+}
+
+.sitename{
+    font-family: roboto;
+    font-size: 6vw;
+    color: white;
+}
+
+
+@media(min-width:768px){
+    .sitename_bottom{padding-bottom: 3vw}
+    .section_name{font-size: 2vw}
+    .cardname{font-size: 1vw}
+    .carousel_small{display: none}
+}
+
+@media(max-width: 768px){
+    .sitename_menu{font-size: 2vw;}
+    .sitename_bottom{padding-bottom: 0vw}
+    .section_name{font-size: 3vw}
+    .cardname{font-size: 1.5vw}
+    .carousel_large{display: none}
+}
+
+.product_cards{
+    width: 20vw; 
+    box-shadow: 0px 0px 10px #464646;
+    transition: all .2s ease-in-out;
+}
+
+.product_cards_small{
+    width: 70vw; 
+    box-shadow: 0px 0px 10px #464646;
+    transition: all .2s ease-in-out;
+}
+
+.product_cards:hover{
+    box-shadow: 0px 0px 20px #464646;
+}
+
+.add_cart_btn{
+    font-size: 10px;
+    background-color: #fbbde2;
+    color: #464646;
+    transition: all .2s ease-in-out;
+}
+
+.remove_cart_btn{
+    font-size: 10px;
+    background-color: rgb(209, 4, 4);
+    color: #ffffff;
+    transition: all .2s ease-in-out;
+}
+
+.add_cart_btn:hover{
+    transform: scale(1.1);
+    box-shadow: 0px 0px 10px #46464649;
+}
+
+.buy_now_btn{
+    font-size: 10px;
+    background-color: #f676c0;
+    color: white;
+    transition: all .2s ease-in-out;
+}
+
+.buy_now_btn:hover{
+    transform: scale(1.1);
+    box-shadow: 0px 0px 10px #46464649;
+}
+
+.sitename_container{
+    transform: scale(1);
+    box-shadow: 0px 10px 10px #46464649;
+}
+
+.product_container{
+    transform: scale(1);
+    box-shadow: 0px -10px 10px #46464649;
+}
+
+.banner li {
+    width: 10px;
+    height: 10px;
+    margin: 5px;
+    border: 1px solid;
+    border-radius: 100%;
+    transition: all .4s ease-in-out;
+}
+
+.carousel-indicators li{
+    width: 1vw;
+    height: 1vw;
+}
+
+.carousel-indicators li.active{
+    transform: scale(1.5);
+}
+
+.menu_items{
+    transition: all .2s ease-in-out;
+}
+
+.menu_items:hover{
+    transform: scale(1.1);
+    color: #464646;
+}
+
+.search_form{
+    transition: all .2s ease-in-out;
+}
+
+.search_form:hover{
+    transform: scale(1.2);
+}
+
+.product-icons{
+    position: relative;
+    z-index: -12;
+    height: 120px;
+    object-fit: contain;
+    border-radius: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    transition: all .2s ease-in-out;
+}
+
+
+.icon_button:focus{
+    box-shadow: 0px 0px 10px #f676c0;
+}
+
+.icon_button_active{
+    box-shadow: 0px 0px 10px #f676c0;
+}
+
+.star_yellow{
+    color: rgb(228, 228, 4);
+}
+
+.star_font{
+    margin-right: 5px;
+    font-size: 20px;
+    transition: all 0.1s ease-in-out;
+}
+
+.darkblue{
+    color: #00c6dd;
+}
+
+.related{
+    z-index: 10000;
+    box-shadow: 0px -10px 20px #464646a1;
+    background-color: #f676c0;
+}
+
+.socialfooter{
+    border: 1px solid white;
+    width: 30px;
+    padding: 5px;
+    margin-right: 20px;
+}
+
+.socialrow a{
+    color: white;
+    transition: all 0.1s ease-in-out;
+}
+
+.socialrow a:hover{
+    transform: scale(1.2);
+}
+
+.circledot{
+    background-color: white;
+    width: 6px;
+    height: 6px;
+    border-radius: 100%;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #ffffff; 
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #fbbde2; 
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #f676c0; 
+  }
+
+  .removeit{
+    display: none;
+  }
+
+  .paybtn{
+    text-align: left;
+    padding: 2vw;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+  }
+  
+  .paybtnpink{
+      background-color: #fbbde2;
+  }
+
+  .roundbtn{
+      border-radius: 20px
+  }
+
+  .carousel-caption {
+    top: 20%;
+    bottom: auto;
+    -webkit-text-stroke-width: 1px;
+   -webkit-text-stroke-color: black;
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+}
+
+
+
+
+
+
+
+
+
+
